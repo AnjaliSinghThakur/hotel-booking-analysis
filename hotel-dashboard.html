@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel Booking Cancellation Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#14213d;--mute:#64708a;--line:#e2e7f0;--a:#2f6fed;--b:#14a3a3;--c:#f2a900;--hd:#12284c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1525;--card:#16203a;--ink:#e8edf7;--mute:#97a3bd;--line:#26324f;--hd:#0a1122}}
+:root[data-theme="dark"]{--bg:#0e1525;--card:#16203a;--ink:#e8edf7;--mute:#97a3bd;--line:#26324f;--hd:#0a1122}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 'IBM Plex Sans',system-ui,sans-serif}
+header{background:var(--hd);color:#fff;padding:1.2rem 5vw}
+header h1{margin:0;font-size:1.35rem;font-weight:600}
+header p{margin:.2rem 0 0;color:#aebbd6;font-size:.85rem}
+main{padding:1.2rem 5vw 2rem;max-width:1280px;margin:0 auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem 1.2rem}
+.kpi{border-left:4px solid var(--a)}
+.kpi:nth-child(2){border-left-color:var(--c)}.kpi:nth-child(3){border-left-color:var(--b)}.kpi:nth-child(4){border-left-color:#7a5af8}
+.kpi small{color:var(--mute);display:block}
+.kpi b{font-size:2rem;font-weight:600;line-height:1.2;display:block}
+.kpi span{color:var(--mute);font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;margin-top:1rem}
+.g6{grid-column:span 6}.g4{grid-column:span 4}.g8{grid-column:span 8}
+@media(max-width:900px){.g6,.g4,.g8{grid-column:span 12}}
+h2{margin:0 0 .6rem;font-size:.95rem;font-weight:600}
+.h{position:relative;height:260px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:.45rem .3rem;border-bottom:1px solid var(--line)}
+th{color:var(--mute);font-weight:500}
+.ins li{margin:.5rem 0}
+footer{color:var(--mute);font-size:.8rem;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>Hotel Booking Cancellation Dashboard</h1>
+  <p>City Hotel and Resort Hotel, 2015 to 2017. 87,230 bookings after cleaning.</p>
+</header>
+<main>
+  <section class="kpis" aria-label="Key metrics">
+    <div class="card kpi"><small>Bookings analysed</small><b>119,390</b><span>87,230 after removing duplicates and empty bookings</span></div>
+    <div class="card kpi"><small>Cancellation rate</small><b>27.5%</b><span>37.0% on the raw file</span></div>
+    <div class="card kpi"><small>Model accuracy</small><b>80.2%</b><span>Random Forest, 20% unseen test data</span></div>
+    <div class="card kpi"><small>Peak month</small><b>August</b><span>11,242 bookings, average daily rate EUR 147</span></div>
+  </section>
+
+  <section class="grid">
+    <div class="card g8"><h2>Bookings and cancellation rate by arrival month</h2><div class="h"><canvas id="c1"></canvas></div></div>
+    <div class="card g4"><h2>Cancellation rate by hotel</h2><div class="h"><canvas id="c2"></canvas></div></div>
+    <div class="card g6"><h2>Cancellation rate by lead time</h2><div class="h"><canvas id="c3"></canvas></div></div>
+    <div class="card g6"><h2>Cancellation rate by market segment</h2><div class="h"><canvas id="c4"></canvas></div></div>
+    <div class="card g6"><h2>Average daily rate by month (EUR, non-cancelled)</h2><div class="h"><canvas id="c5"></canvas></div></div>
+    <div class="card g6"><h2>What drives cancellations (Random Forest)</h2><div class="h"><canvas id="c6"></canvas></div></div>
+    <div class="card g6"><h2>Model comparison</h2>
+      <table><tr><th>Model</th><th>Accuracy</th><th>F1 score</th></tr>
+      <tr><td>Random Forest</td><td>80.2%</td><td>59.5%</td></tr>
+      <tr><td>Logistic Regression</td><td>78.7%</td><td>50.3%</td></tr></table>
+    </div>
+    <div class="card g6"><h2>Key takeaways</h2><ul class="ins" style="padding-left:1.1rem;margin:0">
+      <li>Bookings made 180+ days ahead cancel 39.7% of the time, versus 8.4% within a week.</li>
+      <li>Online travel agency bookings cancel 35.4%, direct bookings 14.7%.</li>
+      <li>City Hotel cancels more (30.1%) than Resort Hotel (23.5%).</li>
+    </ul></div>
+  </section>
+  <footer>Source: Hotel Booking Demand dataset (Antonio, Almeida and Nunes, 2019). The "Undefined" market segment is left out because it has too few bookings, and non-refundable deposits (94.7% cancelled) are left out as a likely data quirk.</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function(){
+if(!window.Chart)return;
+var A='#2f6fed',B='#14a3a3',C='#f2a900',T='#7d89a3',G='rgba(125,137,163,.22)';
+Chart.defaults.font.family="'IBM Plex Sans',system-ui,sans-serif";Chart.defaults.color=T;
+var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function base(extra){return Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:G},beginAtZero:true}}},extra||{})}
+function pct(v){return v+'%'}
+new Chart(c1,{data:{labels:M,datasets:[
+ {type:'bar',label:'Bookings',data:[4685,6083,7489,7900,8344,7756,10043,11242,6682,6921,4973,5112],backgroundColor:A,yAxisID:'y',borderRadius:3},
+ {type:'line',label:'Cancellation rate (%)',data:[22.1,23.2,24.4,30.5,29.3,30.3,31.8,32.2,24.6,23.7,21.2,26.9],borderColor:C,backgroundColor:C,yAxisID:'y1',tension:.3}]},
+ options:base({plugins:{legend:{display:true,position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:G},beginAtZero:true,title:{display:true,text:'Bookings'}},y1:{position:'right',beginAtZero:true,max:40,grid:{display:false},title:{display:true,text:'Cancellation rate (%)'}}}})});
+new Chart(c2,{type:'doughnut',data:{labels:['City Hotel 30.1%','Resort Hotel 23.5%'],datasets:[{data:[30.1,23.5],backgroundColor:[A,B],borderWidth:0}]},
+ options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom'}}}});
+new Chart(c3,{type:'bar',data:{labels:['0-7 days','8-30','31-90','91-180','180+'],datasets:[{data:[8.4,25.4,32.0,35.0,39.7],backgroundColor:A,borderRadius:3}]},
+ options:base({scales:{x:{grid:{display:false}},y:{grid:{color:G},beginAtZero:true,ticks:{callback:pct}}}})});
+new Chart(c4,{type:'bar',data:{labels:['Online TA','Groups','Aviation','Offline TA/TO','Direct','Complementary','Corporate'],datasets:[{data:[35.4,27.1,19.9,14.8,14.7,12.3,12.1],backgroundColor:B,borderRadius:3}]},
+ options:base({indexAxis:'y',scales:{y:{grid:{display:false}},x:{grid:{color:G},beginAtZero:true,ticks:{callback:pct}}}})});
+new Chart(c5,{type:'line',data:{labels:M,datasets:[{data:[67.3,73.0,78.1,99.5,106.9,116.5,133.6,147.4,110.2,87.6,70.8,78.5],borderColor:C,backgroundColor:'rgba(242,169,0,.15)',fill:true,tension:.3,pointRadius:3}]},options:base()});
+new Chart(c6,{type:'bar',data:{labels:['Lead time','Daily rate (ADR)','Weeknight stays','Special requests','Weekend stays','Online TA segment','Parking spaces','Adults'],datasets:[{data:[.269,.214,.078,.069,.045,.034,.032,.025],backgroundColor:A,borderRadius:3}]},
+ options:base({indexAxis:'y',scales:{y:{grid:{display:false}},x:{grid:{color:G},beginAtZero:true,title:{display:true,text:'Feature importance'}}}})});
+})();
+</script>
+</body>
+</html>
