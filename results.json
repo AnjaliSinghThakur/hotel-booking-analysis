@@ -1,0 +1,93 @@
+{
+ "raw_rows": 119390,
+ "clean_rows": 87230,
+ "overall_cancel": 27.523787687722113,
+ "by_hotel": {
+  "City Hotel": 30.1,
+  "Resort Hotel": 23.5
+ },
+ "by_deposit": {
+  "Non Refund": 94.7,
+  "No Deposit": 26.7,
+  "Refundable": 24.3
+ },
+ "by_segment": {
+  "Undefined": 100.0,
+  "Online TA": 35.4,
+  "Groups": 27.1,
+  "Aviation": 19.9,
+  "Offline TA/TO": 14.8,
+  "Direct": 14.7,
+  "Complementary": 12.3,
+  "Corporate": 12.1
+ },
+ "by_lead": {
+  "0-7d": 8.4,
+  "8-30d": 25.4,
+  "31-90d": 32.0,
+  "91-180d": 35.0,
+  "180d+": 39.7
+ },
+ "month_cancel": {
+  "January": 22.1,
+  "February": 23.2,
+  "March": 24.4,
+  "April": 30.5,
+  "May": 29.3,
+  "June": 30.3,
+  "July": 31.8,
+  "August": 32.2,
+  "September": 24.6,
+  "October": 23.7,
+  "November": 21.2,
+  "December": 26.9
+ },
+ "month_volume": {
+  "January": 4685,
+  "February": 6083,
+  "March": 7489,
+  "April": 7900,
+  "May": 8344,
+  "June": 7756,
+  "July": 10043,
+  "August": 11242,
+  "September": 6682,
+  "October": 6921,
+  "November": 4973,
+  "December": 5112
+ },
+ "adr_month": {
+  "January": 67.3,
+  "February": 73.0,
+  "March": 78.1,
+  "April": 99.5,
+  "May": 106.9,
+  "June": 116.5,
+  "July": 133.6,
+  "August": 147.4,
+  "September": 110.2,
+  "October": 87.6,
+  "November": 70.8,
+  "December": 78.5
+ },
+ "models": {
+  "Logistic Regression": [
+   78.7,
+   50.3
+  ],
+  "Random Forest": [
+   80.2,
+   59.5
+  ]
+ },
+ "top_features": {
+  "lead_time": 0.269,
+  "adr": 0.214,
+  "stays_in_week_nights": 0.078,
+  "total_of_special_requests": 0.069,
+  "stays_in_weekend_nights": 0.045,
+  "market_segment_Online TA": 0.034,
+  "required_car_parking_spaces": 0.032,
+  "adults": 0.025
+ }
+}
